@@ -1,4 +1,4 @@
-const connectToDB = require("../DataBase/DBmongoose");
+const connectToDB = require("../../DataBase/DBmongoose");
 const bcryptjs = require("bcryptjs");
 /**
  *

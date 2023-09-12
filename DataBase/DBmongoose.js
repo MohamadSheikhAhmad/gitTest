@@ -6,8 +6,9 @@ const connectionString = "mongodb://0.0.0.0/"; //"mongodb+srv://sheikhahmadmoh:A
 
 let ConnectionArr = [];
 
-/*
-return object that have coonection to the wanted database 
+/**
+ * @param {*} databaseName 
+ * @returns object that have coonection to the wanted database 
 at the begining we check if we have an already open connection
 if not we open a new connection
 */
@@ -19,10 +20,13 @@ const getMongooseConnection = async (databaseName) => {
   }
   return DBC;
 };
-//
-/* check if we have an open connection to the database 
-  if yes return that connection   
-*/
+
+/**
+ * 
+ * @param {*} databaseName 
+ * @returns check if we have an open connection to the database 
+  if yes return that conn@returns ection   
+ */
 function checkConnection(databaseName) {
   for (const DBC of ConnectionArr) {
     if (DBC.databaseName === databaseName) {
@@ -33,11 +37,11 @@ function checkConnection(databaseName) {
   return false;
 }
 
-/*
-  open a new connection to the wanted database and return that connection 
+/**
+ * @param {*} databaseName 
+ * open a new connection to the wanted database and return that connection 
   add that connection to the array of connection to un up coming requsts for that database 
-
-*/
+ */
 function addConnection(databaseName) {
   const jsonObject = {};
   const uri = connectionString + databaseName;
@@ -46,15 +50,15 @@ function addConnection(databaseName) {
   /*
 add the mongoose models to the specific connection
 */
-  const UserModel = connection.model("User", require("../modules/user"));
+  const UserModel = connection.model("User", require("./modules/user"));
 
   const RulesCollection = connection.model(
     "RulesCollection",
-    require("../modules/RulesCollection")
+    require("./modules/RulesCollection")
   );
   const LogSchema = connection.model(
     "LogSchema",
-    require("../modules/logSchem")
+    require("./modules/logSchem")
   );
 
   jsonObject.databaseName = databaseName;
@@ -65,6 +69,35 @@ add the mongoose models to the specific connection
   ConnectionArr.push(jsonObject);
   return jsonObject;
 }
+
+/**
+ *
+ * @param {*} databaseURL
+ * @returns list of existed databases for the system
+ */
+async function checkDatabaseExistence(databaseURL) {
+  try {
+    await mongoose.connect("mongodb://0.0.0.0/", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    const adminDb = mongoose.connection.db.admin();
+    const databasesList = await adminDb.listDatabases();
+
+    const databaseNames = databasesList.databases.map((db) => db.name);
+    console.log("List of databases:", databaseNames);
+    const databaseExists = databasesList.databases.some(
+      (db) => db.name === databaseURL
+    );
+    return databaseExists;
+  } catch (error) {
+    console.error("Error:", error);
+  } finally {
+    mongoose.connection.close();
+  }
+}
+
 function func() {
   const MongoClient = require("mongodb").MongoClient;
 
@@ -88,4 +121,5 @@ function func() {
     getDatabaseConnection,
   };
 }
+
 module.exports = getMongooseConnection;
