@@ -75,27 +75,35 @@ add the mongoose models to the specific connection
  * @param {*} databaseURL
  * @returns list of existed databases for the system
  */
-async function checkDatabaseExistence(databaseURL) {
-  try {
-    await mongoose.connect("mongodb://0.0.0.0/", {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+async function checkDatabaseExistence(databaseName) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const connection = mongoose.createConnection("mongodb://0.0.0.0/");
+      connection.once("open", async () => {
+        try {
+          const adminDb = connection.db.admin();
+          const databases = await adminDb.listDatabases();
+          const exists = databases.databases.some(
+            (db) => db.name === databaseName
+          );
+          connection.close();
+          resolve(exists); // Resolve the promise with the result
+        } catch (error) {
+          console.error("Error:", error);
+          reject(error); // Reject the promise on error
+        }
+      });
 
-    const adminDb = mongoose.connection.db.admin();
-    const databasesList = await adminDb.listDatabases();
-
-    const databaseNames = databasesList.databases.map((db) => db.name);
-    console.log("List of databases:", databaseNames);
-    const databaseExists = databasesList.databases.some(
-      (db) => db.name === databaseURL
-    );
-    return databaseExists;
-  } catch (error) {
-    console.error("Error:", error);
-  } finally {
-    mongoose.connection.close();
-  }
+      // Handle connection errors
+      connection.on("error", (error) => {
+        console.error("Mongoose connection error:", error);
+        reject(error); // Reject the promise on error
+      });
+    } catch (error) {
+      console.error(error);
+      reject(error); // Reject the promise on error
+    }
+  });
 }
 
 function func() {
@@ -122,4 +130,6 @@ function func() {
   };
 }
 
-module.exports = getMongooseConnection;
+module.exports = { getMongooseConnection, checkDatabaseExistence };
+
+//module.exports = getMongooseConnection, checkDatabaseExistence;

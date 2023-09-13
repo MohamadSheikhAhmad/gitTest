@@ -3,19 +3,20 @@ const {
   createNewUSer,
   updateUser,
   deleteExistedUser,
-} = require("./Service/userManagementService.js");
+} = require("./Routes/Service/userManagementService.js");
 
 const {
   getAllRules,
   createNewRule,
   updateRule,
   deleteExistedRule,
-} = require("./Service/rulesService.js");
+} = require("./Routes/Service/rulesService.js");
 
+const login = require("./Routes/Service/LogInService.js");
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
-
+require("dotenv").config();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
@@ -64,14 +65,35 @@ const ruleService = () => {
     deleteExistedRule,
   });
 };
+
+const exposeLogInService = async (req, res, next) => {
+  req.service = LogInService();
+  next();
+};
+const LogInService = () => {
+  return Object.freeze({
+    login,
+  });
+};
 app.use(
   "/admin",
   exposeuserMangemnService,
-  require("./Controllers/userManagementController.js")
+  require("./Routes/Controllers/userManagementController.js")
 );
 app.use(
   "/rule",
   exposeRuleService,
-  require("./Controllers/rulesController.js")
+  require("./Routes/Controllers/rulesController.js")
 );
+app.use(
+  "/signup",
+  exposeRuleService,
+  require("./Routes/Controllers/SingUpController.js")
+);
+app.use(
+  "/login",
+  exposeLogInService,
+  require("./Routes/Controllers/LogInController.js")
+);
+
 app.listen(8080);

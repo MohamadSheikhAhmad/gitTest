@@ -1,4 +1,4 @@
-const connectToDB = require("../../DataBase/DBmongoose");
+const getMongooseConnection = require("../../DataBase/DBmongoose");
 const bcryptjs = require("bcryptjs");
 /**
  *
@@ -119,7 +119,7 @@ async function encryptedPassword() {
  */
 async function getDatabaseConnection(databaseName) {
   try {
-    const connection = await connectToDB(databaseName);
+    const connection = await getMongooseConnection(databaseName);
     return connection;
   } catch (error) {
     console.log("Error in connecting to database ", error);

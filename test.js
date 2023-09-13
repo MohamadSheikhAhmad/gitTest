@@ -1,4 +1,6 @@
 //const intervalID = setInterval(myCallback, 500, "Parameter 1", "Parameter 2");
+const mongoose = require("mongoose");
+const Admin = mongoose.mongo.Admin;
 
 function myCallback(a, b) {
   console.log(a);
@@ -46,3 +48,72 @@ function getCurrentTime() {
     today.getSeconds()
   );
 }
+
+async function checkDatabaseExistence3() {
+  try {
+    const connection = await mongoose.createConnection("mongodb://0.0.0.0/");
+
+    connection.once("open", async () => {
+      try {
+        // Access the native MongoDB client instance
+        const adminDb = connection.db.admin();
+
+        // List all databases
+        const databases = await adminDb.listDatabases();
+
+        // Print the list of database names
+
+        console.log("List of databases:");
+        console.log(databases);
+        databases.databases.forEach((db) => {
+          console.log(`- ${db.name}`);
+        });
+
+        // Close the Mongoose connection
+        connection.close();
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    });
+
+    // Handle connection errors
+    connection.on("error", (error) => {
+      console.error("Mongoose connection error:", error);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+async function checkDatabaseExistence(databaseName) {
+  try {
+    const connection = await mongoose.createConnection("mongodb://0.0.0.0/");
+    connection.once("open", async () => {
+      try {
+        const adminDb = connection.db.admin();
+        const databases = await adminDb.listDatabases();
+        console.log(databases);
+        const exists = databases.databases.some(
+          (db) => db.name === databaseName
+        );
+        console.log(exists);
+        connection.close();
+        return exists;
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    });
+
+    // Handle connection errors
+    connection.on("error", (error) => {
+      console.error("Mongoose connection error:", error);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function main() {
+  const result = await checkDatabaseExistence("temp");
+  console.log(` here  ${result}`);
+}
+main();

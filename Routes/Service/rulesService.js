@@ -1,4 +1,4 @@
-const connectToDB = require("../DataBase/DBmongoose");
+const getMongooseConnection = require("../../DataBase/DBmongoose");
 /**
  *
  * @param {*} databaseName
@@ -7,7 +7,7 @@ const connectToDB = require("../DataBase/DBmongoose");
  */
 async function getAllRules(databaseName) {
   try {
-    const conn = await connectToDB(databaseName);
+    const conn = await getMongooseConnection(databaseName);
     const result = await conn.RulesCollection
       .find
       //{},
@@ -122,7 +122,7 @@ async function updateRule(databaseName, req) {
 
 async function getDatabaseConnection(databaseName) {
   try {
-    const connection = await connectToDB(databaseName);
+    const connection = await getMongooseConnection(databaseName);
     return connection;
   } catch (error) {
     console.log("Error in connecting to database ", error);
