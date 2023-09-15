@@ -16,7 +16,7 @@ const getMongooseConnection = async (databaseName) => {
   let DBC = checkConnection(databaseName);
   if (DBC === false) {
     console.log(`database connection not found ${databaseName}`);
-    DBC = addConnection(databaseName);
+    DBC = addConnection2(databaseName);
   }
   return DBC;
 };
@@ -42,32 +42,87 @@ function checkConnection(databaseName) {
  * open a new connection to the wanted database and return that connection 
   add that connection to the array of connection to un up coming requsts for that database 
  */
-function addConnection(databaseName) {
+async function addConnection(databaseName) {
   const jsonObject = {};
   const uri = connectionString + databaseName;
-  const connection = mongoose.createConnection(uri);
+  const connection = await mongoose.createConnection(uri);
 
   /*
 add the mongoose models to the specific connection
+in case its the main database for admin add only user model
 */
-  const UserModel = connection.model("User", require("./modules/user"));
+  if (databaseName !== "AdminDB") {
+    const RulesCollection = connection.model(
+      "RulesCollection",
+      require("./modules/RulesCollection")
+    );
+    const LogSchema = connection.model(
+      "LogSchema",
+      require("./modules/logSchem")
+    );
 
-  const RulesCollection = connection.model(
-    "RulesCollection",
-    require("./modules/RulesCollection")
-  );
-  const LogSchema = connection.model(
-    "LogSchema",
-    require("./modules/logSchem")
-  );
+    jsonObject.RulesCollection = RulesCollection;
+    jsonObject.LogSchema = LogSchema;
+  }
+  const UserModel = connection.model("User", require("./modules/user"));
 
   jsonObject.databaseName = databaseName;
   jsonObject.UserModel = UserModel;
-  jsonObject.RulesCollection = RulesCollection;
-  jsonObject.LogSchema = LogSchema;
 
   ConnectionArr.push(jsonObject);
   return jsonObject;
+}
+
+async function addConnection2(databaseName) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const jsonObject = {};
+      const uri = connectionString + databaseName;
+      const connection = await mongoose.createConnection(uri);
+      connection.once("open", async () => {
+        try {
+          const adminDb = connection.db.admin();
+
+          /*
+  add the mongoose models to the specific connection
+  in case its the main database for admin add only user model
+  */
+          if (databaseName !== "AdminDB") {
+            const RulesCollection = connection.model(
+              "RulesCollection",
+              require("./modules/RulesCollection")
+            );
+            const LogSchema = connection.model(
+              "LogSchema",
+              require("./modules/logSchem")
+            );
+
+            jsonObject.RulesCollection = RulesCollection;
+            jsonObject.LogSchema = LogSchema;
+          }
+          const UserModel = connection.model("User", require("./modules/user"));
+
+          jsonObject.databaseName = databaseName;
+          jsonObject.UserModel = UserModel;
+
+          ConnectionArr.push(jsonObject);
+          resolve(jsonObject); // Resolve the promise with the result
+        } catch (error) {
+          console.error("Error:", error);
+          reject(error); // Reject the promise on error
+        }
+      });
+
+      // Handle connection errors
+      connection.on("error", (error) => {
+        console.error("Mongoose connection error:", error);
+        reject(error); // Reject the promise on error
+      });
+    } catch (error) {
+      console.error(error);
+      reject(error); // Reject the promise on error
+    }
+  });
 }
 
 /**
@@ -78,6 +133,8 @@ add the mongoose models to the specific connection
 async function checkDatabaseExistence(databaseName) {
   return new Promise(async (resolve, reject) => {
     try {
+      const connectionString =
+        "mongodb+srv://nawrasrabeeaa99:0frN4gIrcryrKWsz@mydatadb.hnd4abh.mongodb.net/moviesdb?retryWrites=true&w=majority";
       const connection = mongoose.createConnection("mongodb://0.0.0.0/");
       connection.once("open", async () => {
         try {
@@ -86,6 +143,7 @@ async function checkDatabaseExistence(databaseName) {
           const exists = databases.databases.some(
             (db) => db.name === databaseName
           );
+          console.log(databases);
           connection.close();
           resolve(exists); // Resolve the promise with the result
         } catch (error) {
@@ -110,8 +168,8 @@ function func() {
   const MongoClient = require("mongodb").MongoClient;
 
   const connectionString =
-    "mongodb+srv://sheikhahmadmoh:Abgadhwaz@123@cluster0.qtmlqtq.mongodb.net/";
-
+    "mongodb+srv://nawrasrabeeaa99:0frN4gIrcryrKWsz@mydatadb.hnd4abh.mongodb.net/moviesdb?retryWrites=true&w=majority";
+  // "mongodb+srv://sheikhahmadmoh:Abgadhwaz@123@cluster0.qtmlqtq.mongodb.net/";
   const getDatabaseConnection = (databaseName) => {
     return MongoClient.connect(connectionString, {
       useNewUrlParser: true,

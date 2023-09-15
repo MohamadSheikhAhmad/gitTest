@@ -16,13 +16,17 @@ const {
 async function login(req) {
   try {
     //const companyName = paraseCompanyNameFromUserName(req.body.userName);
-    const companyName = "tempaa";
+    console.log(`user name is   ${req.body.userName}`);
+    const [companyName, username] = paraseCompanyNameFromUserName(
+      req.body.userName
+    );
+
     //const companyName = paraseCompanyNameFromEmail(req.body.username);
     const password = req.body.password;
-    const username = req.body.userName;
     //check if company is defined
     const dbCheck = await checkCompany(companyName);
 
+    console.log(`companyName ${companyName}  username ${username} `);
     console.log(`db check  ${dbCheck}`);
 
     if (!dbCheck) return `Incorrect company ${companyName} `;
@@ -30,8 +34,8 @@ async function login(req) {
     const connection = await getMongooseConnection(companyName);
 
     const userExist = await connection.UserModel.find({ userName: username });
-    const pass = userExist[0].password;
     if (!userExist) return "Incorrect username";
+    const pass = userExist[0].password;
 
     const isMatch = await bcryptjs.compare(password, pass);
     if (!isMatch) return "Incorrect password!";
@@ -78,10 +82,12 @@ const paraseCompanyNameFromEmail = (email) => {
  * @param {*} string
  * @returns extract company name from the username
  */
-function paraseCompanyNameFromUserName(string) {
+function paraseCompanyNameFromUserName(username) {
   //user name  =>  companyName.userName
-  const parts = string.split(".");
-  return parts[0];
+  console.log(username);
+  const parts = username.split(".");
+
+  return parts;
 }
 /**
  *

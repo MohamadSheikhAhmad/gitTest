@@ -117,3 +117,32 @@ async function main() {
   console.log(` here  ${result}`);
 }
 main();
+
+const jsonObject = {};
+const uri = connectionString + databaseName;
+const connection = await mongoose.createConnection(uri);
+
+/*
+add the mongoose models to the specific connection
+in case its the main database for admin add only user model
+*/
+if (databaseName !== "AdminDB") {
+  const RulesCollection = connection.model(
+    "RulesCollection",
+    require("./modules/RulesCollection")
+  );
+  const LogSchema = connection.model(
+    "LogSchema",
+    require("./modules/logSchem")
+  );
+
+  jsonObject.RulesCollection = RulesCollection;
+  jsonObject.LogSchema = LogSchema;
+}
+const UserModel = connection.model("User", require("./modules/user"));
+
+jsonObject.databaseName = databaseName;
+jsonObject.UserModel = UserModel;
+
+ConnectionArr.push(jsonObject);
+return jsonObject;

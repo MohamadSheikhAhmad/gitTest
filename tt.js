@@ -29,7 +29,18 @@ async function checkDatabaseExistence(databaseName) {
 }
 
 async function func() {
-  const re = await checkDatabaseExistence("temp");
-  console.log("re", re);
+  const [companyName, username] = paraseCompanyNameFromUserName("amdocs.asd");
+  console.log(username);
+  console.log(companyName);
 }
+
+function paraseCompanyNameFromUserName(username) {
+  //user name  =>  companyName.userName
+  console.log(username);
+  const parts = username.split(".");
+  console.log(parts);
+  console.log(parts[0]);
+  return parts;
+}
+
 func();

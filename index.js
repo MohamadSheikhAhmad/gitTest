@@ -13,6 +13,8 @@ const {
 } = require("./Routes/Service/rulesService.js");
 
 const login = require("./Routes/Service/LogInService.js");
+const signup = require("./Routes/Service/signUpService.js");
+
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
@@ -75,6 +77,16 @@ const LogInService = () => {
     login,
   });
 };
+
+const exposeSingUpService = async (req, res, next) => {
+  req.service = SingUpService();
+  next();
+};
+const SingUpService = () => {
+  return Object.freeze({
+    signup,
+  });
+};
 app.use(
   "/admin",
   exposeuserMangemnService,
@@ -87,7 +99,7 @@ app.use(
 );
 app.use(
   "/signup",
-  exposeRuleService,
+  exposeSingUpService,
   require("./Routes/Controllers/SingUpController.js")
 );
 app.use(

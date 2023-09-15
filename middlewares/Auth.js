@@ -20,7 +20,7 @@ const Auth = async (req, res, next) => {
     if (!decoded) {
       res.sendStatus(403);
     }
-    req.user = userExists;
+    req.user = decoded;
     req.token = token;
     next();
   } catch (err) {
