@@ -1,4 +1,4 @@
-const getMongooseConnection = require("../../DataBase/DBmongoose");
+const { getMongooseConnection } = require("../../DataBase/DBmongoose");
 const bcryptjs = require("bcryptjs");
 /**
  *
@@ -45,6 +45,7 @@ async function createNewUSer(databaseName, req) {
     }
   } catch (error) {
     console.log("Error in creating the user", error);
+    return "Error in creating the user";
   }
 }
 
@@ -62,11 +63,11 @@ async function deleteExistedUser(databaseName, username) {
     });
     if (!userExists) return "User dose not exists!";
     else {
-      console.log(userExists);
       return "Deleted Successfully";
     }
   } catch (error) {
     console.log("Error in deleting user", error);
+    return "Error in updating user";
   }
 }
 
@@ -80,7 +81,6 @@ async function updateUser(databaseName, req) {
   try {
     const connection = await getDatabaseConnection(databaseName);
     const username = req.body.userName;
-    console.log(username);
     const userExists = await connection.UserModel.findOne({
       userName: username,
     });
@@ -88,7 +88,6 @@ async function updateUser(databaseName, req) {
     if (!userExists) return "User dose not exists!";
     else {
       for (let elem in req.body) {
-        console.log("elem", elem, "reqBody", JSON.stringify(req.body[elem]));
         userExists[elem] = req.body[elem];
       }
       const result = await userExists.save();
@@ -96,6 +95,7 @@ async function updateUser(databaseName, req) {
     }
   } catch (error) {
     console.log("Error in finding  user", error);
+    return "Error in updating user";
   }
 }
 
@@ -119,7 +119,7 @@ async function encryptedPassword() {
  */
 async function getDatabaseConnection(databaseName) {
   try {
-    const connection = await getMongooseConnection(databaseName);
+    const connection = getMongooseConnection(databaseName);
     return connection;
   } catch (error) {
     console.log("Error in connecting to database ", error);

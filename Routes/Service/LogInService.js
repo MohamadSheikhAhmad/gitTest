@@ -15,10 +15,6 @@ const {
  */
 async function login(req) {
   try {
-    console.log("iam here ");
-    console.log(req.body);
-    //const companyName = paraseCompanyNameFromUserName(req.body.userName);
-    console.log(`user name is   ${req.body.userName}`);
     const [companyName, username] = paraseCompanyNameFromUserName(
       req.body.userName
     );
@@ -27,9 +23,6 @@ async function login(req) {
     const password = req.body.password;
     //check if company is defined
     const dbCheck = await checkCompany(companyName);
-
-    console.log(`companyName ${companyName}  username ${username} `);
-    console.log(`db check  ${dbCheck}`);
 
     if (!dbCheck) return `Incorrect company ${companyName} `;
 
@@ -42,11 +35,6 @@ async function login(req) {
     const isMatch = await bcryptjs.compare(password, pass);
     if (!isMatch) return "Incorrect password!";
 
-    /*
-    if(userExist.firstLogIn){
-      return "need to reset password";
-    }
-    */
     const tokenPayload = {
       userName: userExist[0].userName,
       email: userExist[0].email,
@@ -60,6 +48,7 @@ async function login(req) {
     return JWTtoken;
   } catch (error) {
     console.log(error);
+    return "failed to log in ";
   }
 }
 
@@ -74,7 +63,6 @@ const paraseCompanyNameFromEmail = (email) => {
   //amdocs.mustafa
   if (domain && domain.length > 1) {
     const companyName = domain[1];
-    console.log(companyName);
     return companyName;
   } else {
     console.log("Invalid email address");
@@ -87,7 +75,6 @@ const paraseCompanyNameFromEmail = (email) => {
  */
 function paraseCompanyNameFromUserName(username) {
   //user name  =>  companyName.userName
-  console.log(username);
   const parts = username.split(".");
 
   return parts;
@@ -99,7 +86,6 @@ function paraseCompanyNameFromUserName(username) {
  */
 async function checkCompany(companyName) {
   const companyFlag = checkDatabaseExistence(companyName);
-  console.log(`company flag ${companyFlag}`);
   return companyFlag;
 }
 

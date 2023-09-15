@@ -11,7 +11,6 @@ async function signup(req) {
     req.body;
   try {
     var dbCheck = await checkCompany(companyName);
-    console.log(dbCheck);
     if (dbCheck) {
       console.log(dbCheck);
       return `company ${companyName} already exists `;
@@ -43,35 +42,24 @@ async function signup(req) {
     if (existingPhoneNumber) {
       return "phone number  already exists in the system";
     }
-    console.log(`company ${companyName}`);
     const connection = await getDatabaseConnection(companyName);
     await connection;
 
     dbCheck = checkCompany(companyName);
 
-    console.log(`dbcheck ${dbCheck}`);
-    if (!dbCheck) return `failed `;
+    if (!dbCheck) return `failed to sign up`;
     const encrypted = await encryptedPassword(password);
-    console.log(encrypted);
     var newUser = req.body;
-    //var newUser = new connection.UserModel(req.body);
-    console.log(newUser);
     newUser.password = encrypted;
     newUser.firstLogIn = false;
     newUser.role = "admin";
     const adminResult = await AdminConnection.UserModel.create(newUser);
     const userResult = await connection.UserModel.create(newUser);
-    console.log("********************************");
-    console.log(`userResult `);
-    console.log(userResult);
-    console.log("********************************");
-    console.log(`adminResult `);
-    console.log(adminResult);
-    console.log("********************************");
 
     return "sign up success";
   } catch (e) {
     console.log(e);
+    return "failed to sign up";
   }
 }
 /**
@@ -81,7 +69,6 @@ async function signup(req) {
  */
 async function checkCompany(companyName) {
   const companyFlag = checkDatabaseExistence(companyName);
-  console.log(`company flag ${companyFlag}`);
   return companyFlag;
 }
 

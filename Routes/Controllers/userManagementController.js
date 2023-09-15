@@ -1,39 +1,44 @@
 var express = require("express");
 var router = express.Router();
+const { Auth } = require("../../middlewares/Auth");
 
-router.get("/get", async (req, res) => {
-  console.log(req.service);
+router.get("/get", Auth, async (req, res) => {
   const result = await req.service.getAllUsers(req.user.companyName);
-  if (result.includes("Error")) {
-    res.send(400, result);
+  if (typeof result === String) {
+    if (result.includes("Error")) {
+      res.send(400, result);
+    }
   }
   res.send(200, result);
 });
 
-router.post("/save", async (req, res) => {
+router.post("/save", Auth, async (req, res) => {
   const result = await req.service.createNewUSer(req.user.companyName, req);
-  if (result === "user already exists") {
+  if (
+    result === "user already exists" ||
+    result === "Error in creating the user"
+  ) {
     res.send(400, result);
   } else {
     res.send(200, result);
   }
 });
 
-router.put("/update", async (req, res) => {
+router.put("/update", Auth, async (req, res) => {
   const result = await req.service.updateUser(req.user.companyName, req);
-  if (result !== "User do not exists!") {
+  if (result === "User do not exists!" || result === "Error in updating user") {
     res.send(400, result);
   } else {
     res.send(200, result);
   }
 });
 
-router.delete("/delete", async (req, res) => {
+router.delete("/delete", Auth, async (req, res) => {
   const result = await req.service.deleteExistedUser(
     req.user.companyName,
     req.body.userName
   );
-  if (result !== "User do not exists!") {
+  if (result === "User do not exists!" || result === "Error in updating user") {
     res.send(400, result);
   } else {
     res.send(200, result);

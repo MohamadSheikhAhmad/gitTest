@@ -109,5 +109,4 @@ module.exports = {
   createNewRule,
   updateRule,
   deleteExistedRule,
-  getConfiguratorRules,
 };
