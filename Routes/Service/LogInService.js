@@ -15,6 +15,8 @@ const {
  */
 async function login(req) {
   try {
+    console.log("iam here ");
+    console.log(req.body);
     //const companyName = paraseCompanyNameFromUserName(req.body.userName);
     console.log(`user name is   ${req.body.userName}`);
     const [companyName, username] = paraseCompanyNameFromUserName(
@@ -46,6 +48,7 @@ async function login(req) {
     }
     */
     const tokenPayload = {
+      userName: userExist[0].userName,
       email: userExist[0].email,
       role: userExist[0].role,
       firstName: userExist[0].firstName,

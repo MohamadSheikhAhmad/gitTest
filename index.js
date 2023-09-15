@@ -7,6 +7,8 @@ const {
 
 const {
   getAllRules,
+
+  getConfiguratorRules,
   createNewRule,
   updateRule,
   deleteExistedRule,
@@ -62,6 +64,7 @@ const exposeRuleService = async (req, res, next) => {
 const ruleService = () => {
   return Object.freeze({
     getAllRules,
+    getConfiguratorRules,
     createNewRule,
     updateRule,
     deleteExistedRule,

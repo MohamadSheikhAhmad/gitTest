@@ -10,7 +10,7 @@ async function getAllUsers(databaseName) {
     const connection = await getDatabaseConnection(databaseName);
     const result = await connection.UserModel.find(
       {},
-      { _id: 0, __v: 0, password: 0, firstLogIn: 0 }
+      { _id: 0, __v: 0, password: 0, firstLogIn: 0, companyName: 0 }
     );
     return result;
   } catch (error) {

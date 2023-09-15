@@ -17,12 +17,13 @@ const Auth = async (req, res, next) => {
         }
       }
     );
-    if (!decoded) {
+    if (decoded === undefined) {
       res.sendStatus(403);
+    } else {
+      req.user = decoded;
+      req.token = token;
+      next();
     }
-    req.user = decoded;
-    req.token = token;
-    next();
   } catch (err) {
     res
       .status(401)
