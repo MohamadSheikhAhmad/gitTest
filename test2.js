@@ -6,14 +6,6 @@ const bcryptjs = require("bcryptjs");
  * @returns the encrypted password that we want to save it in the database
  */
 
-async function encryptedPassword() {
-  const password = "default";
-  const salt = await bcryptjs.genSalt(8);
-  console.log(salt);
-  const encryptedPassword = await bcryptjs.hash(password, salt);
-  return encryptedPassword;
-}
-
 async function ttt() {
   const pss = await encryptedPassword();
   console.log(pss);
