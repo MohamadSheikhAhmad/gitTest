@@ -38,6 +38,7 @@ async function createNewUSer(databaseName, req) {
       const encrypted = await encryptedPassword();
       const newUser = new connection.UserModel(req.body);
       console.log(newUser);
+      newUser.companyName = databaseName;
       newUser.password = encrypted;
       newUser.firstLogIn = true;
       const result = await newUser.save();
