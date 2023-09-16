@@ -8,9 +8,12 @@ router.post("/", async (req, res) => {
       res.status(400).json({ success: false, result });
     }
   } else {
-    res
-      .status(200)
-      .json({ success: true, accessToken: result, role: req.user.role });
+    var obj = {
+      success: true,
+      accessToken: result.JWTtoken,
+      role: result.role,
+    };
+    res.status(200).json(obj);
   }
 });
 

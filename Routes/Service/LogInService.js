@@ -44,8 +44,9 @@ async function login(req) {
       username: userExist[0].username,
       companyName: userExist[0].companyName,
     };
+
     const JWTtoken = jwt.sign(tokenPayload, process.env.JWT_SECRET);
-    return JWTtoken;
+    return { JWTtoken: JWTtoken, role: tokenPayload.role };
   } catch (error) {
     console.log(error);
     return "failed to log in ";
