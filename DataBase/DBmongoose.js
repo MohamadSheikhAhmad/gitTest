@@ -2,7 +2,8 @@ const { json } = require("express");
 const mongoose = require("mongoose");
 const MongoClient = require("mongodb").MongoClient;
 
-const connectionString = "mongodb://0.0.0.0/"; //"mongodb+srv://sheikhahmadmoh:Abgadhwaz%40123@cluster0.qtmlqtq.mongodb.net/";
+//const connectionString = "mongodb://0.0.0.0/"; //"mongodb+srv://sheikhahmadmoh:Abgadhwaz%40123@cluster0.qtmlqtq.mongodb.net/";
+const connectionString = "mongodb://localhost:27017/"; //"mongodb+srv://sheikhahmadmoh:Abgadhwaz%40123@cluster0.qtmlqtq.mongodb.net/";
 
 let ConnectionArr = [];
 
@@ -133,9 +134,9 @@ async function addConnection2(databaseName) {
 async function checkDatabaseExistence(databaseName) {
   return new Promise(async (resolve, reject) => {
     try {
-      const connectionString =
-        "mongodb+srv://nawrasrabeeaa99:0frN4gIrcryrKWsz@mydatadb.hnd4abh.mongodb.net/moviesdb?retryWrites=true&w=majority";
-      const connection = mongoose.createConnection("mongodb://0.0.0.0/");
+      //const connectionString =
+      //"mongodb+srv://nawrasrabeeaa99:0frN4gIrcryrKWsz@mydatadb.hnd4abh.mongodb.net/moviesdb?retryWrites=true&w=majority";
+      const connection = mongoose.createConnection(connectionString);
       connection.once("open", async () => {
         try {
           const adminDb = connection.db.admin();
