@@ -8,7 +8,7 @@ router.post("/", async (req, res) => {
       res.send(400, result);
     }
   } else {
-    res.status(200).json({ accessToken: result });
+    res.status(200).json({ accessToken: result, role: req.user.role });
   }
 });
 
