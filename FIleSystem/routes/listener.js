@@ -29,7 +29,7 @@ function startLogListener(logFolder, filesSet, databaseName) {
     }
 
     // Send the eventType and filePath to the server
-    axios.post("http://localhost:5000/file-changed", {
+    axios.post("http://localhost:5000/filesystem/file-changed", {
       eventType: "add",
       filePath,
     });
