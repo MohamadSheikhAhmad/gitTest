@@ -168,7 +168,7 @@ async function checkCollection(fileName, databaseName) {
 
 function workerHandler(fileName, databaseName) {
   console.log("enterned");
-  let worker = new Worker("./routes/driveWorker.js");
+  let worker = new Worker("./FIleSystem/routes/driveWorker.js");
   worker.postMessage({ data: fileName, db: databaseName });
   worker.on("message", (data) => {
     console.log(data);

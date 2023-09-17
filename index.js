@@ -20,8 +20,8 @@ var app = express();
 
 var bodyParser = require("body-parser");
 require("dotenv").config();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -108,6 +108,6 @@ app.use(
   exposeLogInService,
   require("./Routes/Controllers/LogInController.js")
 );
-app.use("/file", require("./FIleSystem/fileSystemController.js"));
+app.use("/filesystem", require("./FIleSystem/fileSystemController.js"));
 
 app.listen(5000);

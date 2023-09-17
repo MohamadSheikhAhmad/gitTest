@@ -60,7 +60,7 @@ function startLogListener(logFolder, filesSet, databaseName) {
 
 function workerHandler(fileName, databaseName) {
   console.log("enterned");
-  let worker = new Worker("./routes/listenerWorker.js");
+  let worker = new Worker("./FIleSystem/routes/listenerWorker.js");
   worker.postMessage({ data: fileName, db: databaseName });
   worker.on("message", (data) => {
     console.log(data);
