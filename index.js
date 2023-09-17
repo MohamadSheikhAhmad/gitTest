@@ -7,7 +7,6 @@ const {
 
 const {
   getAllRules,
-
   createNewRule,
   updateRule,
   deleteExistedRule,
@@ -18,6 +17,7 @@ const signup = require("./Routes/Service/signUpService.js");
 
 var express = require("express");
 var app = express();
+
 var bodyParser = require("body-parser");
 require("dotenv").config();
 app.use(bodyParser.json());
@@ -108,5 +108,6 @@ app.use(
   exposeLogInService,
   require("./Routes/Controllers/LogInController.js")
 );
+app.use("/file", require("./FIleSystem/fileSystemController.js"));
 
 app.listen(5000);

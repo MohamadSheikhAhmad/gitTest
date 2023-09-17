@@ -49,100 +49,42 @@ function getCurrentTime() {
   );
 }
 
-async function checkDatabaseExistence3() {
-  try {
-    const connection = await mongoose.createConnection("mongodb://0.0.0.0/");
+async function checkFileCollectionExistence(databaseName) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const connection = mongoose.createConnection(
+        `mongodb://localhost:27017/${databaseName}`
+      );
+      connection.once("open", async () => {
+        try {
+          const db = connection.db; // Get the Db object from the connection
+          const collections = await db.listCollections().toArray();
+          const collectionNames = collections.map(
+            (collection) => collection.name
+          );
+          connection.close();
+          resolve(collectionNames); // Resolve the promise with the result
+        } catch (error) {
+          console.error("Error:", error);
+          reject(error); // Reject the promise on error
+        }
+      });
 
-    connection.once("open", async () => {
-      try {
-        // Access the native MongoDB client instance
-        const adminDb = connection.db.admin();
-
-        // List all databases
-        const databases = await adminDb.listDatabases();
-
-        // Print the list of database names
-
-        console.log("List of databases:");
-        console.log(databases);
-        databases.databases.forEach((db) => {
-          console.log(`- ${db.name}`);
-        });
-
-        // Close the Mongoose connection
-        connection.close();
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    });
-
-    // Handle connection errors
-    connection.on("error", (error) => {
-      console.error("Mongoose connection error:", error);
-    });
-  } catch (error) {
-    console.error(error);
-  }
+      // Handle connection errors
+      connection.on("error", (error) => {
+        console.error("Mongoose connection error:", error);
+        reject(error); // Reject the promise on error
+      });
+    } catch (error) {
+      console.error(error);
+      reject(error); // Reject the promise on error
+    }
+  });
 }
-async function checkDatabaseExistence(databaseName) {
-  try {
-    const connection = await mongoose.createConnection("mongodb://0.0.0.0/");
-    connection.once("open", async () => {
-      try {
-        const adminDb = connection.db.admin();
-        const databases = await adminDb.listDatabases();
-        console.log(databases);
-        const exists = databases.databases.some(
-          (db) => db.name === databaseName
-        );
-        console.log(exists);
-        connection.close();
-        return exists;
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    });
-
-    // Handle connection errors
-    connection.on("error", (error) => {
-      console.error("Mongoose connection error:", error);
-    });
-  } catch (error) {
-    console.error(error);
-  }
+async function listlists() {
+  // const collections = await db.db.listCollections().toArray();
+  const result = await checkFileCollectionExistence("galil");
+  console.log(result);
 }
 
-async function main() {
-  const result = await checkDatabaseExistence("temp");
-  console.log(` here  ${result}`);
-}
-main();
-
-const jsonObject = {};
-const uri = connectionString + databaseName;
-const connection = await mongoose.createConnection(uri);
-
-/*
-add the mongoose models to the specific connection
-in case its the main database for admin add only user model
-*/
-if (databaseName !== "AdminDB") {
-  const RulesCollection = connection.model(
-    "RulesCollection",
-    require("./modules/RulesCollection")
-  );
-  const LogSchema = connection.model(
-    "LogSchema",
-    require("./modules/logSchem")
-  );
-
-  jsonObject.RulesCollection = RulesCollection;
-  jsonObject.LogSchema = LogSchema;
-}
-const UserModel = connection.model("User", require("./modules/user"));
-
-jsonObject.databaseName = databaseName;
-jsonObject.UserModel = UserModel;
-
-ConnectionArr.push(jsonObject);
-return jsonObject;
+listlists();

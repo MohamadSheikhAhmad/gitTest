@@ -38,42 +38,6 @@ function checkConnection(databaseName) {
   return false;
 }
 
-/**
- * @param {*} databaseName 
- * open a new connection to the wanted database and return that connection 
-  add that connection to the array of connection to un up coming requsts for that database 
- */
-async function addConnection(databaseName) {
-  const jsonObject = {};
-  const uri = connectionString + databaseName;
-  const connection = await mongoose.createConnection(uri);
-
-  /*
-add the mongoose models to the specific connection
-in case its the main database for admin add only user model
-*/
-  if (databaseName !== "AdminDB") {
-    const RulesCollection = connection.model(
-      "RulesCollection",
-      require("./modules/RulesCollection")
-    );
-    const LogSchema = connection.model(
-      "LogSchema",
-      require("./modules/logSchem")
-    );
-
-    jsonObject.RulesCollection = RulesCollection;
-    jsonObject.LogSchema = LogSchema;
-  }
-  const UserModel = connection.model("User", require("./modules/user"));
-
-  jsonObject.databaseName = databaseName;
-  jsonObject.UserModel = UserModel;
-
-  ConnectionArr.push(jsonObject);
-  return jsonObject;
-}
-
 async function addConnection2(databaseName) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -91,17 +55,20 @@ async function addConnection2(databaseName) {
           if (databaseName !== "AdminDB") {
             const RulesCollection = connection.model(
               "RulesCollection",
-              require("./modules/RulesCollection")
+              require("./DataBase/modules/RulesCollection")
             );
             const LogSchema = connection.model(
               "LogSchema",
-              require("./modules/logSchem")
+              require("./DataBase/modules/logSchem")
             );
 
             jsonObject.RulesCollection = RulesCollection;
             jsonObject.LogSchema = LogSchema;
           }
-          const UserModel = connection.model("User", require("./modules/user"));
+          const UserModel = connection.model(
+            "User",
+            require("./DataBase/modules/user")
+          );
 
           jsonObject.databaseName = databaseName;
           jsonObject.UserModel = UserModel;
@@ -188,67 +155,21 @@ async function checkFileCollectionExistence(databaseName) {
   });
 }
 
-async function func2(databaseName) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      //const connection = mongoose.createConnection(
-      // `mongodb://localhost:27017/${databaseName}`
-      // );
-      const connection = await getMongooseConnection(databaseName);
-      connection.once("open", async () => {
-        try {
-          const db = connection.db; // Get the Db object from the connection
-          const collections = await db.listCollections().toArray();
-          const collectionNames = collections.map(
-            (collection) => collection.name
-          );
-          connection.close();
-          resolve(collectionNames); // Resolve the promise with the result
-        } catch (error) {
-          console.error("Error:", error);
-          reject(error); // Reject the promise on error
-        }
-      });
+var fileSchema = mongoose.Schema({
+  date: String,
+  info: String,
+});
 
-      // Handle connection errors
-      connection.on("error", (error) => {
-        console.error("Mongoose connection error:", error);
-        reject(error); // Reject the promise on error
-      });
-    } catch (error) {
-      console.error(error);
-      reject(error); // Reject the promise on error
-    }
-  });
+async function test() {
+  const result = await checkFileCollectionExistence("galil");
+  console.log(result);
+  const obj = await getMongooseConnection("galil");
+
+  const User = obj.connection.model("mohamadtest", fileSchema);
+  await User.createCollection();
+
+  const result2 = await checkFileCollectionExistence("galil");
+  console.log(result2);
 }
-function func() {
-  const MongoClient = require("mongodb").MongoClient;
-
-  const connectionString =
-    "mongodb+srv://nawrasrabeeaa99:0frN4gIrcryrKWsz@mydatadb.hnd4abh.mongodb.net/moviesdb?retryWrites=true&w=majority";
-  // "mongodb+srv://sheikhahmadmoh:Abgadhwaz@123@cluster0.qtmlqtq.mongodb.net/";
-  const getDatabaseConnection = (databaseName) => {
-    return MongoClient.connect(connectionString, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
-      .then((client) => {
-        return client.getDB(databaseName);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  module.exports = {
-    getDatabaseConnection,
-  };
-}
-
-module.exports = {
-  getMongooseConnection,
-  checkDatabaseExistence,
-  checkFileCollectionExistence,
-};
-
+test();
 //module.exports = getMongooseConnection, checkDatabaseExistence;
