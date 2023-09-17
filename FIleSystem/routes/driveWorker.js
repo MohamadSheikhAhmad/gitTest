@@ -38,13 +38,7 @@ parentPort.on("message", async (message) => {
             date: dateStr,
             info: line.substring(32, line.length),
           });
-          new_file.save(function (err, result) {
-            if (err) {
-              console.log(err);
-            } else {
-              //console.log(result);
-            }
-          });
+          new_file.save();
         });
       }
     });
