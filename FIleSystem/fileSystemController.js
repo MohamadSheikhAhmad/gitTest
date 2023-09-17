@@ -118,7 +118,7 @@ router.post("/set-folder", Auth, (req, res) => {
   res.send(`Now watching: ${logFolder}`);
 });
 
-router.post("/file-changed", (req, res) => {
+router.post("/file-changed", Auth, (req, res) => {
   const { eventType, filePath } = req.body;
 
   if (eventType === "add") {
