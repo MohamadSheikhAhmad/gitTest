@@ -3,7 +3,7 @@ const { Auth } = require("../../middlewares/Auth");
 var router = express.Router();
 
 router.get("/get", Auth, async (req, res) => {
-  const result = await req.service.getAllRules(req.user.companyName);
+  const result = await req.service.getAllRules(req);
   if (result === "error") {
     res.send(500, result);
   }

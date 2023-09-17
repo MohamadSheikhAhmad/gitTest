@@ -25,6 +25,7 @@ router.post("/save", Auth, async (req, res) => {
 });
 
 router.put("/update", Auth, async (req, res) => {
+  console.log(req.body);
   const result = await req.service.updateUser(req.user.companyName, req);
   if (result === "User do not exists!" || result === "Error in updating user") {
     res.send(400, result);
@@ -33,7 +34,8 @@ router.put("/update", Auth, async (req, res) => {
   }
 });
 
-router.delete("/delete:userName", Auth, async (req, res) => {
+router.delete("/delete/:userName", Auth, async (req, res) => {
+  console.log(req.params.userName);
   const result = await req.service.deleteExistedUser(
     req.user.companyName,
     req.params.userName

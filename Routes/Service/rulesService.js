@@ -5,11 +5,19 @@ const { getMongooseConnection } = require("../../DataBase/DBmongoose");
  * @returns all rules in the database
  *
  */
-async function getAllRules(databaseName) {
+async function getAllRules(req) {
   try {
-    const conn = await getDatabaseConnection(databaseName);
-    const result = await conn.RulesCollection.find({}, { _id: 0, __v: 0 });
-    return result;
+    const conn = await getDatabaseConnection(req.user.companyName);
+    if (req.user.role === "admin") {
+      const result = await conn.RulesCollection.find({}, { _id: 0, __v: 0 });
+      return result;
+    } else {
+      const result = await conn.RulesCollection.find(
+        {},
+        { _id: 0, __v: 0 }
+      ).where({ userName: req.user.userName });
+      return result;
+    }
   } catch (error) {
     console.log("Error in get all rules", error);
     return "error";
