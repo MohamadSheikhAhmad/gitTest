@@ -9,7 +9,7 @@ var rawSchema = mongoose.Schema({
 
 var LogSchema = mongoose.Schema({
   file_name: String,
-  user_name: String,
+  userName: String,
   file_date: Date,
   process: [rawSchema],
 });
