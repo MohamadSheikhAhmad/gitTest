@@ -2,7 +2,7 @@ var mongoose = require("mongoose");
 //const connection = mongoose.connect('mongodb://127.0.0.1:27017/logAnalyzer');
 
 var fileSchema = mongoose.Schema({
-  user_name: String,
+  userName: String,
   file_date: Date,
   date: Date,
   info: String,
