@@ -1,5 +1,5 @@
 var mongoose = require("mongoose");
-const { fileSchema } = require("../modules/fileDB");
+const { fileSchema } = require("../../DataBase/modules/fileDB");
 const {
   getMongooseConnection,
   returnFileCollections,
