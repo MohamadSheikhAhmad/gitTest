@@ -1,3 +1,5 @@
+var today = new Date();
+
 function getCurrentDate() {
   return (
     (today.getDate() < 10 ? "0" : "") +
@@ -8,7 +10,6 @@ function getCurrentDate() {
     "/" +
     today.getFullYear()
   );
-  getCurrentDate;
 }
 function getCurrentTime() {
   return (

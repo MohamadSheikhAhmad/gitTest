@@ -32,7 +32,7 @@ async function analyze(req, rules, file, callback) {
       file_date: getDate(),
       process: res_analyzed,
     });
-
+    console.log(`iam here  ${new_file}`);
     await new_file
       .save()
       .then((result) => {
