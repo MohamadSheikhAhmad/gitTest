@@ -5,25 +5,34 @@ const { getMongooseConnection } = require("../../DataBase/DBmongoose");
  * @returns all rules in the database
  *
  */
-async function getAllRules(req) {
+async function getAllRules(databaseName) {
   try {
-    const conn = await getDatabaseConnection(req.user.companyName);
-    if (req.user.role === "admin") {
-      const result = await conn.RulesCollection.find({}, { _id: 0, __v: 0 });
-      return result;
-    } else {
-      const result = await conn.RulesCollection.find(
-        {},
-        { _id: 0, __v: 0 }
-      ).where({ userName: req.user.userName });
-      return result;
-    }
+    const conn = await getDatabaseConnection(databaseName);
+
+    const result = await conn.RulesCollection.find(
+      {},
+      { _id: 0, __v: 0, userName: 0 }
+    );
+    return result;
   } catch (error) {
     console.log("Error in get all rules", error);
     return "error";
   }
 }
 
+async function getRulesByName(rules, databaseName) {
+  try {
+    const connecting = await getMongooseConnection(databaseName);
+    const File = connecting.model("rulescollections", RulesSchema);
+    const result = await File.find(
+      { ruleName: { $in: rules } },
+      { _id: 0, __v: 0, userName: 0 }
+    );
+    return result;
+  } catch (error) {
+    return error;
+  }
+}
 async function createNewRule(databaseName, req) {
   try {
     const connection = await getDatabaseConnection(databaseName);
@@ -112,9 +121,27 @@ async function getDatabaseConnection(databaseName) {
     console.log("Error in connecting to database ", error);
   }
 }
+
+async function getRulesByName(ruleNames, databaseName) {
+  return new Promise(async (resolve, reject) => {
+    const connection = await getDatabaseConnection(databaseName);
+    connection.RulesCollection.find(
+      { rule_name: { $in: ruleNames } },
+      (err, rules) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rules);
+        }
+      }
+    );
+  });
+}
 module.exports = {
+  getRulesByName,
   getAllRules,
   createNewRule,
   updateRule,
+  getRulesByName,
   deleteExistedRule,
 };

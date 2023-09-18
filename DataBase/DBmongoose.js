@@ -95,7 +95,7 @@ async function addConnection2(databaseName) {
             );
             const LogSchema = connection.model(
               "LogSchema",
-              require("./modules/logSchem")
+              require("./modules/logDB")
             );
 
             jsonObject.RulesCollection = RulesCollection;
@@ -188,6 +188,29 @@ async function checkFileCollectionExistence(databaseName) {
   });
 }
 
+async function returnFileCollections(databaseName) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const obj = await getMongooseConnection(databaseName);
+      try {
+        const db = obj.connection.db;
+        const collections = await db.listCollections().toArray();
+
+        const filesNames = collections
+          .map((collection) => collection.name)
+          .filter((name) => name.startsWith("file_"));
+        resolve(filesNames);
+      } catch (error) {
+        console.error("Error:", error);
+        reject(error);
+      }
+    } catch (error) {
+      console.error(error);
+      reject(error);
+    }
+  });
+}
+
 async function func2(databaseName) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -249,6 +272,7 @@ module.exports = {
   getMongooseConnection,
   checkDatabaseExistence,
   checkFileCollectionExistence,
+  returnFileCollections,
 };
 
 //module.exports = getMongooseConnection, checkDatabaseExistence;

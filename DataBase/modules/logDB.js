@@ -13,4 +13,5 @@ var LogSchema = mongoose.Schema({
   file_date: Date,
   process: [rawSchema],
 });
+
 module.exports = LogSchema;

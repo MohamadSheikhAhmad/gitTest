@@ -49,7 +49,20 @@ function getCurrentTime() {
   );
 }
 
-async function checkFileCollectionExistence(databaseName) {
+var fileSchema = mongoose.Schema({
+  user_name: String,
+  file_date: Date,
+  date: Date,
+  info: String,
+});
+var RulesSchema = mongoose.Schema({
+  userName: String,
+  ruleName: String,
+  keywords: ["", ""],
+});
+// var Rule = mongoose.model("Rule", ruleSchema, 'rules');
+
+async function checkFileCollectionExistence(databaseName, rules) {
   return new Promise(async (resolve, reject) => {
     try {
       const connection = mongoose.createConnection(
@@ -58,12 +71,16 @@ async function checkFileCollectionExistence(databaseName) {
       connection.once("open", async () => {
         try {
           const db = connection.db; // Get the Db object from the connection
-          const collections = await db.listCollections().toArray();
-          const collectionNames = collections.map(
-            (collection) => collection.name
+
+          const File = connection.model("rulescollections", RulesSchema);
+          const result = await File.find(
+            { ruleName: { $in: rules } },
+            { _id: 0, __v: 0, userName: 0 }
           );
+          console.log(result);
+
           connection.close();
-          resolve(collectionNames); // Resolve the promise with the result
+          resolve(result); // Resolve the promise with the result
         } catch (error) {
           console.error("Error:", error);
           reject(error); // Reject the promise on error
@@ -81,10 +98,78 @@ async function checkFileCollectionExistence(databaseName) {
     }
   });
 }
+
 async function listlists() {
-  // const collections = await db.db.listCollections().toArray();
-  const result = await checkFileCollectionExistence("galil");
-  console.log(result);
+  const rules = [
+    {
+      rule_name: "Error Detection",
+      keywords: ["error", "exception", "failure"],
+    },
+    {
+      rule_name: "Warning Identification",
+      keywords: ["warning"],
+    },
+    {
+      rule_name: "Authentication Issue",
+      keywords: ["authentication", "authorization"],
+    },
+    {
+      rule_name: "Network Anomalies",
+      keywords: ["network", "connection"],
+    },
+    {
+      rule_name: "Performance Bottlenecks",
+      keywords: ["latency", "bottleneck", "load"],
+    },
+    {
+      rule_name: "Security Breach Attempt",
+      keywords: ["attack", "vulnerability"],
+    },
+    {
+      rule_name: "Resource Monitoring",
+      keywords: ["resource", "memory", "disk"],
+    },
+    {
+      rule_name: "Successful Transactions",
+      keywords: ["success", "transaction"],
+    },
+    {
+      rule_name: "Application Events",
+      keywords: ["application", "service", "component"],
+    },
+    {
+      rule_name: "Informational Logs",
+      keywords: ["info"],
+    },
+    {
+      rule_name: "Unauthorized Access",
+      keywords: ["unauthorized", "access_denied", "intrusion"],
+    },
+    {
+      rule_name: "Anomaly Detection",
+      keywords: ["unusual", "abnormal", "anomaly"],
+    },
+    {
+      rule_name: "Malicious Activity",
+      keywords: ["malware", "exploit", "attack"],
+    },
+    {
+      rule_name: "Resource Exceedance",
+      keywords: ["high_usage", "exceeded_limit"],
+    },
+  ];
+  const rulesWithUpdatedProperty = rules.map((rule) => {
+    return {
+      userName: "tets",
+      ruleName: rule.rule_name,
+      keywords: rule.keywords,
+    };
+  });
+  checkFileCollectionExistence("galil", [
+    "Application Events",
+    "Resource Monitoring",
+    "Informational Logs",
+  ]);
 }
 
 listlists();

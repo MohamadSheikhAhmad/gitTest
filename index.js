@@ -110,4 +110,13 @@ app.use(
 );
 app.use("/filesystem", require("./FIleSystem/fileSystemController.js"));
 
+var log = require("./Rules/routes/log.js");
+app.use("/log", log);
+
+var rule = require("./Rules/routes/rule.js");
+app.use("/ruleGroup", rule);
+
+var analyze = require("./Rules/routes/analyze.js");
+app.use("/analyze", analyze);
+
 app.listen(5000);
