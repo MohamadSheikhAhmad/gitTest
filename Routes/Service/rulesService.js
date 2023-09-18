@@ -123,26 +123,10 @@ async function getDatabaseConnection(databaseName) {
   }
 }
 
-async function getRulesByName(ruleNames, databaseName) {
-  return new Promise(async (resolve, reject) => {
-    const connection = await getDatabaseConnection(databaseName);
-    connection.RulesCollection.find(
-      { rule_name: { $in: ruleNames } },
-      (err, rules) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(rules);
-        }
-      }
-    );
-  });
-}
 module.exports = {
   getRulesByName,
   getAllRules,
   createNewRule,
   updateRule,
-  getRulesByName,
   deleteExistedRule,
 };
