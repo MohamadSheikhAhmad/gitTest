@@ -49,7 +49,7 @@ async function deleteExistedRule(databaseName, req) {
     const connection = await getDatabaseConnection(databaseName);
 
     const ruleExists = await connection.RulesCollection.findOne({
-      ruleName: req.body.ruleName,
+      ruleName: req.params.ruleName,
     });
 
     if (!ruleExists) return "rule dose not exists!";
@@ -59,7 +59,7 @@ async function deleteExistedRule(databaseName, req) {
         req.user.role === "admin"
       ) {
         const deletedRule = await connection.RulesCollection.findOneAndRemove({
-          ruleName: req.body.ruleName,
+          ruleName: req.params.ruleName,
         });
         return "Deleted Successfully";
       } else {
