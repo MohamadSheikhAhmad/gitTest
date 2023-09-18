@@ -32,10 +32,8 @@ router.put("/update", Auth, async (req, res) => {
   }
 });
 
-router.delete("/delete/:userName", Auth, async (req, res) => {
+router.delete("/delete/:ruleName", Auth, async (req, res) => {
   const result = await req.service.deleteExistedRule(req.user.companyName, req);
-  console.log("****************************");
-  console.log(result);
   if (typeof result === String) {
     if (result.includes("not")) {
       res.send(400, result);
