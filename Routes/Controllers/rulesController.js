@@ -32,7 +32,7 @@ router.put("/update", Auth, async (req, res) => {
   }
 });
 
-router.delete("/delete", Auth, async (req, res) => {
+router.delete("/delete/:userName", Auth, async (req, res) => {
   const result = await req.service.deleteExistedRule(req.user.companyName, req);
   console.log("****************************");
   console.log(result);
