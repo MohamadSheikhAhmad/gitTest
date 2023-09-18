@@ -28,7 +28,7 @@ async function analyze(req, rules, file, callback) {
     // save in DB log_analyzation collection new document for the analyzed file
     const new_file = new connection.LogSchema({
       file_name: file,
-      user_name: logs[0].user_name,
+      user_name: req.user.userName,
       file_date: logs[0].file_date,
       process: res_analyzed,
     });
