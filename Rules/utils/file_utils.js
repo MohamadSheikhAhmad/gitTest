@@ -7,7 +7,7 @@ const {
 
 async function getLogs(log_file, databaseName) {
   const connecting = await getMongooseConnection(databaseName);
-  const File = connection.model("File", fileSchema, log_file);
+  const File = connecting.connection.model(log_file, fileSchema);
   //const File = mongoose.model("File", fileSchema, log_file);
   try {
     const logs = await File.find({}).exec();
