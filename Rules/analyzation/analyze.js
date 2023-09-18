@@ -29,18 +29,18 @@ async function analyze(req, rules, file, callback) {
     const new_file = new connection.LogSchema({
       file_name: file,
       userName: req.user.userName,
-      file_date: getDate(),
+      file_date: new Date(),
       process: res_analyzed,
     });
-    console.log(`iam here  ${new_file}`);
+    //console.log(`iam here  ${new_file}`);
     await new_file
       .save()
       .then((result) => {
-        console.log("Log entry saved:", result._id);
+        ///console.log("Log entry saved:", result._id);
         // call the function to check if dispatcher needed
         const [res_condition, abnormalErrors] =
           checkErrorsForDispatcher(res_analyzed);
-        console.log(res_condition);
+        //console.log(res_condition);
         if (res_condition) {
           console.log("Need to send to dispatcher the :", abnormalErrors);
           //sendToDispatcher(abnormalErrors, result, req);
