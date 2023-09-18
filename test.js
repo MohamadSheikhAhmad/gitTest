@@ -50,8 +50,6 @@ function getCurrentTime() {
 }
 
 var fileSchema = mongoose.Schema({
-  user_name: String,
-  file_date: Date,
   date: Date,
   info: String,
 });
@@ -70,15 +68,9 @@ async function checkFileCollectionExistence(databaseName, rules) {
       );
       connection.once("open", async () => {
         try {
-          const db = connection.db; // Get the Db object from the connection
-
-          const File = connection.model("rulescollections", RulesSchema);
-          const result = await File.find(
-            { ruleName: { $in: rules } },
-            { _id: 0, __v: 0, userName: 0 }
-          );
+          const File = connection.model("", fileSchema);
+          const result = await File.find();
           console.log(result);
-
           connection.close();
           resolve(result); // Resolve the promise with the result
         } catch (error) {
