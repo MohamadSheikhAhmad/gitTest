@@ -4,7 +4,7 @@ const { getRules } = require("../utils/rules_utils");
 const { Auth } = require("../../middlewares/Auth");
 
 router.get("/", Auth, function (req, res) {
-  getRules((err, rules) => {
+  getRules(req.user.companyName, (err, rules) => {
     if (err) {
       res.status(500).json({ error: "Internal server error" });
     } else {
