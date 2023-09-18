@@ -8,4 +8,4 @@ var fileSchema = mongoose.Schema({
 
 // var Rule = mongoose.model("Rule", ruleSchema, 'rules');
 
-module.exports = fileSchema;
+module.exports = { fileSchema };

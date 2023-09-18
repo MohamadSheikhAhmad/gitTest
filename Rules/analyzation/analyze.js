@@ -3,7 +3,7 @@ const { getMongooseConnection } = require("../../DataBase/DBmongoose.js");
 
 const { getLogs } = require("../utils/file_utils.js");
 var fileAnalyze = require("./fileAnalyze.js");
-
+const { getDate } = require("../../middlewares/getDate.js");
 const checkErrorsForDispatcher = require("./checkDispatcherNeed");
 const sendToDispatcher = require("./sendToDispatcher");
 
@@ -29,7 +29,7 @@ async function analyze(req, rules, file, callback) {
     const new_file = new connection.LogSchema({
       file_name: file,
       userName: req.user.userName,
-      file_date: logs[0].file_date,
+      file_date: getDate(),
       process: res_analyzed,
     });
 
@@ -43,7 +43,7 @@ async function analyze(req, rules, file, callback) {
         console.log(res_condition);
         if (res_condition) {
           console.log("Need to send to dispatcher the :", abnormalErrors);
-          sendToDispatcher(abnormalErrors, result, req);
+          //sendToDispatcher(abnormalErrors, result, req);
         }
         callback(null, res_analyzed);
       })
@@ -66,7 +66,7 @@ async function analyze(req, rules, file, callback) {
         console.log(res_condition);
         if (res_condition) {
           //console.log("Need to send to dispatcher the :", abnormalErrors);
-          sendToDispatcher(abnormalErrors, file_analyzed, req);
+          //sendToDispatcher(abnormalErrors, file_analyzed, req);
         }
         callback(null, resultRules);
       })
