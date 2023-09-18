@@ -23,8 +23,9 @@ async function getAllRules(databaseName) {
 async function getRulesByName(rules, databaseName) {
   try {
     const connecting = await getMongooseConnection(databaseName);
-    const File = connecting.model("rulescollections", RulesSchema);
-    const result = await File.find(
+    //const File = connecting.model("rulescollections", RulesSchema);
+
+    const result = await connecting.RulesCollection.find(
       { ruleName: { $in: rules } },
       { _id: 0, __v: 0, userName: 0 }
     );
