@@ -5,10 +5,8 @@ var mongoose = require("mongoose");
 const { getMongooseConnection } = require("../../DataBase/DBmongoose");
 
 //mongoose.connect("mongodb://127.0.0.1/FileServer");
-var fileSchema = mongoose.Schema({
-  date: String,
-  info: String,
-});
+var fileSchema = require("../../DataBase/modules/fileDB");
+
 const { parentPort } = require("worker_threads");
 
 parentPort.on("message", async (message) => {

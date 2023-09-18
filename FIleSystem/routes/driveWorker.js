@@ -3,10 +3,8 @@ var express = require("express");
 var mongoose = require("mongoose");
 
 //mongoose.connect("mongodb://127.0.0.1/FileServer");
-var fileSchema = mongoose.Schema({
-  date: String,
-  info: String,
-});
+
+var fileSchema = require("../../DataBase/modules/fileDB");
 
 const { getMongooseConnection } = require("../../DataBase/DBmongoose");
 
