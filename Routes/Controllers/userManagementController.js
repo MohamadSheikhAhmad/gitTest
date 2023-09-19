@@ -46,4 +46,5 @@ router.delete("/delete/:userName", Auth, async (req, res) => {
     res.send(200, result);
   }
 });
+
 module.exports = router;

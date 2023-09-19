@@ -20,6 +20,10 @@ const {
 const login = require("./Routes/Service/LogInService.js");
 const signup = require("./Routes/Service/signUpService.js");
 
+const {
+  updateCompanyInfo,
+  getInfo,
+} = require("./Routes/Service/companyDetailsService.js");
 var express = require("express");
 var app = express();
 
@@ -109,6 +113,22 @@ const SingUpService = () => {
     signup,
   });
 };
+
+const exposecompanyInfoService = async (req, res, next) => {
+  req.service = companyInfoservice();
+  next();
+};
+const companyInfoservice = () => {
+  return Object.freeze({
+    updateCompanyInfo,
+    getInfo,
+  });
+};
+app.use(
+  "/companyInfo",
+  exposecompanyInfoService,
+  require("./Routes/Controllers/companyDetailsController.js")
+);
 app.use(
   "/admin",
   exposeuserMangemnService,

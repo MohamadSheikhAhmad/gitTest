@@ -97,14 +97,25 @@ async function addConnection2(databaseName) {
               "LogSchema",
               require("./modules/logDB")
             );
+            const UserModel = connection.model(
+              "User",
+              require("./modules/user")
+            );
+
+            jsonObject.UserModel = UserModel;
 
             jsonObject.RulesCollection = RulesCollection;
             jsonObject.LogSchema = LogSchema;
+          } else {
+            const adminModel = connection.model(
+              "admin",
+              require("./modules/admin")
+            );
+
+            jsonObject.adminModel = adminModel;
           }
-          const UserModel = connection.model("User", require("./modules/user"));
 
           jsonObject.databaseName = databaseName;
-          jsonObject.UserModel = UserModel;
           jsonObject.connection = connection;
 
           ConnectionArr.push(jsonObject);

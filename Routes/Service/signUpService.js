@@ -19,13 +19,13 @@ async function signup(req) {
     const AdminConnection = await getDatabaseConnection("AdminDB");
 
     //check if the username and mail is already exist
-    const existingEmailUser = await AdminConnection.UserModel.findOne({
+    const existingEmailUser = await AdminConnection.adminModel.findOne({
       email: email,
     });
-    const existingUsernameUser = await AdminConnection.UserModel.findOne({
+    const existingUsernameUser = await AdminConnection.adminModel.findOne({
       userName: userName,
     });
-    const existingPhoneNumber = await AdminConnection.UserModel.findOne({
+    const existingPhoneNumber = await AdminConnection.adminModel.findOne({
       phone: phone,
     });
     if (existingEmailUser && existingUsernameUser) {
@@ -53,7 +53,7 @@ async function signup(req) {
     newUser.password = encrypted;
     newUser.firstLogIn = false;
     newUser.role = "admin";
-    const adminResult = await AdminConnection.UserModel.create(newUser);
+    const adminResult = await AdminConnection.adminModel.create(newUser);
     const userResult = await connection.UserModel.create(newUser);
 
     return "sign up success";

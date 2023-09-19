@@ -12,8 +12,6 @@ router.post("/", async (req, res) => {
     var obj = {
       success: true,
       accessToken: result.JWTtoken,
-      firstName: tokenPayload.firstName,
-      lastName: tokenPayload.lastName,
       role: result.role,
     };
     res.status(200).json(obj);

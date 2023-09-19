@@ -3,10 +3,10 @@ const { getMongooseConnection } = require("../../DataBase/DBmongoose.js");
 
 const { getLogs } = require("../utils/file_utils.js");
 var fileAnalyze = require("./fileAnalyze.js");
-const { getDate } = require("../../middlewares/getDate.js");
 const checkErrorsForDispatcher = require("./checkDispatcherNeed");
 const sendToDispatcher = require("./sendToDispatcher");
 
+const { getInfo } = require("../../Routes/Service/companyDetailsService.js");
 async function analyze(req, rules, file, callback) {
   //get the file data
   const selectedRules = await getRulesByName(rules, req.user.companyName);
@@ -43,7 +43,13 @@ async function analyze(req, rules, file, callback) {
         //console.log(res_condition);
         if (res_condition) {
           console.log("Need to send to dispatcher the :", abnormalErrors);
-          //sendToDispatcher(abnormalErrors, result, req);
+          const company = getInfo(req.user.companyName);
+          for (let elem in company) {
+            if (elem !== _id) {
+              req.body[elem] = company[elem];
+            }
+          }
+          sendToDispatcher(abnormalErrors, result, req, company.length);
         }
         callback(null, res_analyzed);
       })
@@ -66,7 +72,13 @@ async function analyze(req, rules, file, callback) {
         console.log(res_condition);
         if (res_condition) {
           //console.log("Need to send to dispatcher the :", abnormalErrors);
-          //sendToDispatcher(abnormalErrors, file_analyzed, req);
+          const company = getInfo(req.user.companyName);
+          for (let elem in company) {
+            if (elem !== _id) {
+              req.body[elem] = company[elem];
+            }
+          }
+          sendToDispatcher(abnormalErrors, file_analyzed, req, company.length);
         }
         callback(null, resultRules);
       })
