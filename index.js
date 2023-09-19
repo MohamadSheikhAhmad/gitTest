@@ -12,6 +12,10 @@ const {
   deleteExistedRule,
 } = require("./Routes/Service/rulesService.js");
 
+const {
+  deleteExistedLog,
+  getAllLogs,
+} = require("./Routes/Service/logsService.js");
 const login = require("./Routes/Service/LogInService.js");
 const signup = require("./Routes/Service/signUpService.js");
 
@@ -69,6 +73,21 @@ const ruleService = () => {
   });
 };
 
+/**
+ *
+ * inject rules service
+ */
+const exposeLogService = async (req, res, next) => {
+  req.service = logService();
+  next();
+};
+const logService = () => {
+  return Object.freeze({
+    deleteExistedLog,
+    getAllLogs,
+  });
+};
+
 const exposeLogInService = async (req, res, next) => {
   req.service = LogInService();
   next();
@@ -92,6 +111,11 @@ app.use(
   "/admin",
   exposeuserMangemnService,
   require("./Routes/Controllers/userManagementController.js")
+);
+app.use(
+  "/logfiles",
+  exposeLogService,
+  require("./Routes/Controllers/logsController.js")
 );
 app.use(
   "/rule",

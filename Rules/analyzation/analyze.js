@@ -18,7 +18,7 @@ async function analyze(req, rules, file, callback) {
   //const selectedFile = await getFileLogs(file);
 
   //check if file in the database
-  var file_analyzed = await connection.LogSchema.find({ file_name: file });
+  var file_analyzed = await connection.LogSchema.findOne({ file_name: file });
 
   var res_analyzed; // = fileAnalyze(logs, selectedRules);
   //console.log(res_analyzed);
