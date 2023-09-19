@@ -12,12 +12,12 @@ async function getAllLogs(databaseName) {
   }
 }
 
-async function deleteExistedLog(databaseName, file_name) {
+async function deleteExistedLog(databaseName, req) {
   try {
     const connection = await getDatabaseConnection(databaseName);
 
     const ruleExists = await connection.LogSchema.findOne({
-      file_name: file_name,
+      file_name: req.params.file_name,
     });
 
     if (!ruleExists) return "log dose not exists!";
@@ -27,7 +27,7 @@ async function deleteExistedLog(databaseName, file_name) {
         req.user.role === "admin"
       ) {
         const deletedRule = await connection.LogSchema.findOneAndRemove({
-          file_name: file_name,
+          file_name: req.params.file_name,
         });
         return "Deleted Successfully";
       } else {

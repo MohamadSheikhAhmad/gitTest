@@ -11,10 +11,7 @@ router.get("/get", Auth, async (req, res) => {
 });
 
 router.delete("/delete/:file_name", Auth, async (req, res) => {
-  const result = await req.service.deleteExistedLog(
-    req.user.companyName,
-    req.params.file_name
-  );
+  const result = await req.service.deleteExistedLog(req.user.companyName, req);
   if (typeof result === String) {
     if (result.includes("not")) {
       res.send(400, result);
