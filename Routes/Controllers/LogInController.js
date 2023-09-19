@@ -1,5 +1,6 @@
 var express = require("express");
 var router = express.Router();
+const { Auth } = require("../../middlewares/Auth");
 
 router.post("/", async (req, res) => {
   const result = await req.service.login(req);
@@ -17,6 +18,10 @@ router.post("/", async (req, res) => {
     };
     res.status(200).json(obj);
   }
+});
+
+router.get("/getuser", Auth, async (req, res) => {
+  res.json({ firstName: req.user.firstName, lastName: req.user.lastName });
 });
 
 module.exports = router;
