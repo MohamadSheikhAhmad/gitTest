@@ -136,6 +136,8 @@ app.use(
 );
 app.use("/filesystem", require("./FIleSystem/fileSystemController.js"));
 
+app.use("/report", require("./Reports/routes/reports.js"));
+
 var log = require("./Rules/routes/log.js");
 app.use("/log", log);
 
