@@ -27,7 +27,7 @@ async function deleteExistedLog(databaseName, file_name) {
         req.user.role === "admin"
       ) {
         const deletedRule = await connection.LogSchema.findOneAndRemove({
-          ruleName: req.params.ruleName,
+          file_name: file_name,
         });
         return "Deleted Successfully";
       } else {
