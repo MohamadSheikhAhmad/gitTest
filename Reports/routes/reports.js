@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
-var logdb = require("../models/logdb");
-const { log } = require("util");
+//var logdb = require("../models/logdb");
+//const { log } = require("util");
 const backFuncs = require("../backFuncs");
 //const fs = require("fs");
 //const tf = require("@tensorflow/tfjs-node");
@@ -38,7 +38,7 @@ router.get("/", Auth, async function (req, res) {
     res.json({ message: error.message, type: "error" });
   }
 });
-router.post("/getData", async function (req, res) {
+router.post("/getData", Auth, async function (req, res) {
   let dataFromFront = req.body;
   const conn = await getMongooseConnection(req.user.companyName);
   let result = await conn.LogSchema.find({
@@ -116,7 +116,7 @@ router.post("/getData", async function (req, res) {
   */
   res.json({ dataToFront: dataToFront });
 });
-router.get("/:filename", async function (req, res) {
+router.get("/:filename", Auth, async function (req, res) {
   var filename = req.params.filename;
   try {
     const conn = await getMongooseConnection(req.user.companyName);
