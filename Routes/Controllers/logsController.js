@@ -9,6 +9,16 @@ router.get("/get", Auth, async (req, res) => {
   }
   res.send(200, result);
 });
+router.get("/getprocess/:file_name", Auth, async (req, res) => {
+  const result = await req.service.getLogProcess(
+    req.user.companyName,
+    req.params.file_name
+  );
+  if (result === "error") {
+    res.send(500, result);
+  }
+  res.send(200, result);
+});
 
 router.delete("/delete/:file_name", Auth, async (req, res) => {
   const result = await req.service.deleteExistedLog(req.user.companyName, req);

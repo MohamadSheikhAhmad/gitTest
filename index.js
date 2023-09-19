@@ -15,6 +15,7 @@ const {
 const {
   deleteExistedLog,
   getAllLogs,
+  getLogProcess,
 } = require("./Routes/Service/logsService.js");
 const login = require("./Routes/Service/LogInService.js");
 const signup = require("./Routes/Service/signUpService.js");
@@ -85,6 +86,7 @@ const logService = () => {
   return Object.freeze({
     deleteExistedLog,
     getAllLogs,
+    getLogProcess,
   });
 };
 

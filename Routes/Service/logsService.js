@@ -12,6 +12,24 @@ async function getAllLogs(databaseName) {
   }
 }
 
+async function getLogProcess(databaseName, logName) {
+  try {
+    const connection = await getDatabaseConnection(databaseName);
+
+    const result = await connection.LogSchema.findOne(
+      {
+        file_name: logName,
+      },
+      { _id: 0, __v: 0, file_name: 0, userName: 0, file_date: 0 }
+    );
+
+    return result;
+  } catch (error) {
+    console.log("Error in get all rules", error);
+    return "error";
+  }
+}
+
 async function deleteExistedLog(databaseName, req) {
   try {
     const connection = await getDatabaseConnection(databaseName);
@@ -50,5 +68,6 @@ async function getDatabaseConnection(databaseName) {
 }
 module.exports = {
   deleteExistedLog,
+  getLogProcess,
   getAllLogs,
 };

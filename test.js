@@ -22,8 +22,6 @@ const time1 = getCurrentDate() + " " + getCurrentTime();
 
 const time2 = "09/09/2023 15:20:45";
 
-console.log(today);
-
 const differenceInMilliseconds = Date.parse(time1) - Date.parse(time2);
 const differenceInMinutes = differenceInMilliseconds / 1000 / 60;
 
@@ -70,9 +68,12 @@ async function checkFileCollectionExistence(databaseName, rules) {
       );
       connection.once("open", async () => {
         try {
-          const File = connection.model("file_log3.txts", fileSchema);
-          const result = await File.find();
+          const File = connection.model("rulescollections", RulesSchema);
+          const result = await File.findOne({ userName: "me" });
           console.log(result);
+          if (!result) {
+            console.log("iam here");
+          }
           connection.close();
           resolve(result); // Resolve the promise with the result
         } catch (error) {
