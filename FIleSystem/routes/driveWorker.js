@@ -4,8 +4,10 @@ var mongoose = require("mongoose");
 
 //mongoose.connect("mongodb://127.0.0.1/FileServer");
 
-var fileSchema = require("../../DataBase/modules/fileDB");
-
+var fileSchema = mongoose.Schema({
+  date: Date,
+  info: String,
+});
 const { getMongooseConnection } = require("../../DataBase/DBmongoose");
 
 const { parentPort } = require("worker_threads");
