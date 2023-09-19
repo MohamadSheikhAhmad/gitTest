@@ -3,7 +3,7 @@ const { Auth } = require("../../middlewares/Auth");
 var router = express.Router();
 
 router.get("/get", Auth, async (req, res) => {
-  const result = await req.service.getAllRules(req.user.companyName);
+  const result = await req.service.getAllLogs(req.user.companyName);
   if (result === "error") {
     res.send(500, result);
   }
@@ -11,7 +11,7 @@ router.get("/get", Auth, async (req, res) => {
 });
 
 router.delete("/delete/:file_name", Auth, async (req, res) => {
-  const result = await req.service.deleteExistedRule(
+  const result = await req.service.deleteExistedLog(
     req.user.companyName,
     req.params.file_name
   );
