@@ -48,7 +48,9 @@ async function login(req) {
     const JWTtoken = jwt.sign(tokenPayload, process.env.JWT_SECRET);
     return {
       JWTtoken: JWTtoken,
-      userName: tokenPayload.userName,
+      firstName: tokenPayload.firstName,
+      lastName: tokenPayload.lastName,
+
       role: tokenPayload.role,
     };
   } catch (error) {
