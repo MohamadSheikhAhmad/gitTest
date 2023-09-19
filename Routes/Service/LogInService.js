@@ -46,7 +46,11 @@ async function login(req) {
     };
 
     const JWTtoken = jwt.sign(tokenPayload, process.env.JWT_SECRET);
-    return { JWTtoken: JWTtoken, role: tokenPayload.role };
+    return {
+      JWTtoken: JWTtoken,
+      userName: tokenPayload.userName,
+      role: tokenPayload.role,
+    };
   } catch (error) {
     console.log(error);
     return "failed to log in ";
