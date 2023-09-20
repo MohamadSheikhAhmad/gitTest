@@ -10,8 +10,16 @@ async function getInfo(databaseName) {
     const connection = await getDatabaseConnection("AdminDB");
     const result = await connection.adminModel
       .find({ companyName: databaseName })
-      .select("IOT_IP jiraBaseUrl jiraEmail apiToken projectKey");
-    return result;
+      .select({
+        _id: 0,
+        IOT_IP: { $ifNull: ["$IOT_IP", ""] },
+        jiraBaseUrl: { $ifNull: ["$jiraBaseUrl", ""] },
+        jiraEmail: { $ifNull: ["$jiraEmail", ""] },
+        apiToken: { $ifNull: ["$apiToken", ""] },
+        projectKey: { $ifNull: ["$projectKey", ""] },
+      });
+    console.log(result[0]);
+    return result[0];
   } catch (error) {
     console.log("Error in getting company data", error);
   }
@@ -25,13 +33,17 @@ async function getInfo(databaseName) {
  */
 async function updateCompanyInfo(databaseName, req) {
   try {
+    console.log(`req.body  ${JSON.stringify(req.body)}`);
     const connection = await getDatabaseConnection("AdminDB");
-    const companyAdmin = await connection.adminModel.find({
+    const companyAdmin = await connection.adminModel.findOne({
       companyName: databaseName,
     });
+    console.log(`companyAdmin  ${JSON.stringify(companyAdmin)}`);
+
     for (let elem in req.body) {
       companyAdmin[elem] = req.body[elem];
     }
+    console.log(`companyAdmin22  ${JSON.stringify(companyAdmin)}`);
     const result = await companyAdmin.save();
     return result;
   } catch (error) {

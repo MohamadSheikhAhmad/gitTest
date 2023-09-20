@@ -19,7 +19,7 @@ function sendToDispatcher(abnormalErrors, file_analyzed, req, jira) {
     sendData.IOT_IP = req.body.IOT_IP;
   }
   var clientServerOptions = {
-    uri: "http://localhost:5000/reportError",
+    uri: "http://localhost:8080/reportError",
     body: JSON.stringify(sendData),
     method: "POST",
     headers: {
