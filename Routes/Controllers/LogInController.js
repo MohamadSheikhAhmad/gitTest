@@ -4,7 +4,7 @@ const { Auth } = require("../../middlewares/Auth");
 
 router.post("/", async (req, res) => {
   const result = await req.service.login(req);
-  if (typeof result === String) {
+  if (typeof result === "string") {
     if (result.startsWith("Incorrect") || result.startsWith("failed")) {
       res.status(400).json({ success: false, result });
     }

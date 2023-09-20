@@ -5,14 +5,17 @@ const bcryptjs = require("bcryptjs");
  * @param {*} databaseName
  * @returns all users in the database
  */
-async function getAllUsers(databaseName) {
+async function getAllUsers(databaseName, usern) {
   try {
     const connection = await getDatabaseConnection(databaseName);
     const result = await connection.UserModel.find(
       {},
       { _id: 0, __v: 0, password: 0, firstLogIn: 0, companyName: 0 }
     );
-    return result;
+    console.log(result);
+    const final = result.filter((user) => user.userName !== usern);
+    console.log(final);
+    return final;
   } catch (error) {
     console.log("Error in get all users", error);
   }

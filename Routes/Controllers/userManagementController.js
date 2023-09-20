@@ -3,8 +3,12 @@ var router = express.Router();
 const { Auth } = require("../../middlewares/Auth");
 
 router.get("/get", Auth, async (req, res) => {
-  const result = await req.service.getAllUsers(req.user.companyName);
-  if (typeof result === String) {
+  const result = await req.service.getAllUsers(
+    req.user.companyName,
+    req.user.userName
+  );
+
+  if (typeof result === "string") {
     if (result.includes("Error")) {
       res.send(400, result);
     }

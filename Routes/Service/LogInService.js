@@ -35,10 +35,12 @@ async function login(req) {
     const isMatch = await bcryptjs.compare(password, pass);
     if (!isMatch) return "Incorrect password!";
 
+    let phone = "0" + userExist[0].phone;
     const tokenPayload = {
       userName: userExist[0].userName,
       email: userExist[0].email,
       role: userExist[0].role,
+      phone: phone,
       firstName: userExist[0].firstName,
       lastName: userExist[0].lastName,
       username: userExist[0].username,

@@ -44,6 +44,7 @@ async function analyze(req, rules, file, callback) {
         if (res_condition) {
           console.log("Need to send to dispatcher the :", abnormalErrors);
           const company = getInfo(req.user.companyName);
+          console.log(` compan   ${company}`);
           for (let elem in company) {
             if (elem !== _id) {
               req.body[elem] = company[elem];
@@ -73,6 +74,8 @@ async function analyze(req, rules, file, callback) {
         if (res_condition) {
           //console.log("Need to send to dispatcher the :", abnormalErrors);
           const company = getInfo(req.user.companyName);
+          console.log(` 12121   ${company}`);
+
           for (let elem in company) {
             if (elem !== _id) {
               req.body[elem] = company[elem];

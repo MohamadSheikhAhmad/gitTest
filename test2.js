@@ -1,4 +1,5 @@
 const bcryptjs = require("bcryptjs");
+const mongoose = require("mongoose");
 
 /**
  *
@@ -6,120 +7,45 @@ const bcryptjs = require("bcryptjs");
  * @returns the encrypted password that we want to save it in the database
  */
 
-async function ttt() {
-  const pss = await encryptedPassword();
-  console.log(pss);
-  const isMatch = await bcryptjs.compare("default", pss);
-  console.log(isMatch);
+function aaaa(x) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      console.log(x);
+      const jsonObject = {};
+      let connection;
+
+      connection = await mongoose.createConnection(
+        "mongodb://localhost:27017/dis"
+      );
+
+      connection.once("open", async () => {
+        try {
+          const UserModel = connection.model(
+            "User",
+            require("./DataBase/modules/user")
+          );
+          const reult = await UserModel.findOneAndUpdate(
+            { userName: "mohamad" },
+            { phone: "0547396529" }
+          );
+          console.log(reult);
+          resolve(jsonObject); // Resolve the promise with the result
+        } catch (error) {
+          console.error("Error:", error);
+          reject(error); // Reject the promise on error
+        }
+      });
+
+      // Handle connection errors
+      connection.on("error", (error) => {
+        console.error("Mongoose connection error:", error);
+        reject(error); // Reject the promise on error
+      });
+    } catch (error) {
+      console.error(error);
+      reject(error); // Reject the promise on error
+    }
+  });
 }
 
-ttt();
-
-return new Promise(async (resolve, reject) => {
-  try {
-    const jsonObject = {};
-    const uri = connectionString + databaseName;
-    const connection = await mongoose.createConnection(uri);
-    connection.once("open", async () => {
-      try {
-        const adminDb = connection.db.admin();
-
-        /*
-add the mongoose models to the specific connection
-in case its the main database for admin add only user model
-*/
-        if (databaseName !== "AdminDB") {
-          const RulesCollection = connection.model(
-            "RulesCollection",
-            require("./modules/RulesCollection")
-          );
-          const LogSchema = connection.model(
-            "LogSchema",
-            require("./modules/logSchem")
-          );
-
-          jsonObject.RulesCollection = RulesCollection;
-          jsonObject.LogSchema = LogSchema;
-        }
-        const UserModel = connection.model("User", require("./modules/user"));
-
-        jsonObject.databaseName = databaseName;
-        jsonObject.UserModel = UserModel;
-
-        ConnectionArr.push(jsonObject);
-        resolve(jsonObject); // Resolve the promise with the result
-      } catch (error) {
-        console.error("Error:", error);
-        reject(error); // Reject the promise on error
-      }
-    });
-
-    // Handle connection errors
-    connection.on("error", (error) => {
-      console.error("Mongoose connection error:", error);
-      reject(error); // Reject the promise on error
-    });
-  } catch (error) {
-    console.error(error);
-    reject(error); // Reject the promise on error
-  }
-});
-
-const rules = [
-  {
-    rule_name: "Error Detection",
-    keywords: ["error", "exception", "failure"],
-  },
-  {
-    rule_name: "Warning Identification",
-    keywords: ["warning"],
-  },
-  {
-    rule_name: "Authentication Issue",
-    keywords: ["authentication", "authorization"],
-  },
-  {
-    rule_name: "Network Anomalies",
-    keywords: ["network", "connection"],
-  },
-  {
-    rule_name: "Performance Bottlenecks",
-    keywords: ["latency", "bottleneck", "load"],
-  },
-  {
-    rule_name: "Security Breach Attempt",
-    keywords: ["attack", "vulnerability"],
-  },
-  {
-    rule_name: "Resource Monitoring",
-    keywords: ["resource", "memory", "disk"],
-  },
-  {
-    rule_name: "Successful Transactions",
-    keywords: ["success", "transaction"],
-  },
-  {
-    rule_name: "Application Events",
-    keywords: ["application", "service", "component"],
-  },
-  {
-    rule_name: "Informational Logs",
-    keywords: ["info"],
-  },
-  {
-    rule_name: "Unauthorized Access",
-    keywords: ["unauthorized", "access_denied", "intrusion"],
-  },
-  {
-    rule_name: "Anomaly Detection",
-    keywords: ["unusual", "abnormal", "anomaly"],
-  },
-  {
-    rule_name: "Malicious Activity",
-    keywords: ["malware", "exploit", "attack"],
-  },
-  {
-    rule_name: "Resource Exceedance",
-    keywords: ["high_usage", "exceeded_limit"],
-  },
-];
+aaaa();

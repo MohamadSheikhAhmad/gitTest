@@ -12,7 +12,7 @@ router.get("/get", Auth, async (req, res) => {
 
 router.post("/save", Auth, async (req, res) => {
   const result = await req.service.createNewRule(req.user.companyName, req);
-  if (typeof result === String) {
+  if (typeof result === "string") {
     if (result === "rule already exists" || result.includes("Error")) {
       res.send(400, result);
     }
@@ -23,7 +23,7 @@ router.post("/save", Auth, async (req, res) => {
 
 router.put("/update", Auth, async (req, res) => {
   const result = await req.service.updateRule(req.user.companyName, req);
-  if (typeof result === String) {
+  if (typeof result === "string") {
     if (result.includes("not") || result.includes("Error")) {
       res.send(400, result);
     }
@@ -34,7 +34,7 @@ router.put("/update", Auth, async (req, res) => {
 
 router.delete("/delete/:ruleName", Auth, async (req, res) => {
   const result = await req.service.deleteExistedRule(req.user.companyName, req);
-  if (typeof result === String) {
+  if (typeof result === "string") {
     if (result.includes("not")) {
       res.send(400, result);
     }

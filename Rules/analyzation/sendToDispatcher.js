@@ -9,15 +9,18 @@ function sendToDispatcher(abnormalErrors, file_analyzed, req, jira) {
     file_name: file_analyzed.file_name,
     userName: file_analyzed.userName,
     email: req.user.email,
+    companyName: req.user.companyName,
+
     phone: req.user.phone,
   };
-  if (jira.length > 0) {
+  if (jira > 0) {
     sendData.jiraBaseUrl = req.body.jiraBaseUrl;
     sendData.jiraEmail = req.body.jiraEmail;
     sendData.apiToken = req.body.apiToken;
     sendData.projectKey = req.body.projectKey;
     sendData.IOT_IP = req.body.IOT_IP;
   }
+  console.log(JSON.stringify(req.user.phone));
   var clientServerOptions = {
     uri: "http://localhost:8080/reportError",
     body: JSON.stringify(sendData),

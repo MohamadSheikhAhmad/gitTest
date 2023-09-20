@@ -16,8 +16,9 @@ if not we open a new connection
 const getMongooseConnection = async (databaseName) => {
   let DBC = checkConnection(databaseName);
   if (DBC === false) {
-    console.log(`database connection not found ${databaseName}`);
     DBC = addConnection2(databaseName);
+    console.log(DBC);
+    console.log(ConnectionArr);
   }
   return DBC;
 };
@@ -31,12 +32,13 @@ const getMongooseConnection = async (databaseName) => {
 function checkConnection(databaseName) {
   for (const DBC of ConnectionArr) {
     if (DBC.databaseName === databaseName) {
-      console.log(`database connection found ${databaseName}`);
       return DBC;
     }
   }
   return false;
 }
+
+function deleteConnections() {}
 
 /**
  * @param {*} databaseName 

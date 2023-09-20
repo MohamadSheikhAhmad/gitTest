@@ -4,7 +4,7 @@ const { Auth } = require("../../middlewares/Auth");
 
 router.get("/getInfo", Auth, async (req, res) => {
   const result = await req.service.getInfo(req.user.companyName);
-  if (typeof result === String) {
+  if (typeof result === "string") {
     if (result.includes("Error")) {
       res.send(400, result);
     }
